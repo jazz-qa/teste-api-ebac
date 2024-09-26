@@ -26,3 +26,30 @@ Cypress.Commands.add('token', (email, senha) => {
           failOnStatusCode: false
     })
  })
+
+ Cypress.Commands.add('cadastrarUsuario', (nome, email) => {
+    cy.request({
+        method: 'POST',
+        url: 'usuarios',
+        body: {
+            "nome": nome,
+            "email": email,
+            "password": "abc123",
+            "administrador": "true"
+          }
+    })
+})
+
+Cypress.Commands.add('loginEmailInvalido', (email, senha) => {
+    cy.request({
+        method: 'POST',
+        url: 'login',
+        body: {
+            "email": email,
+            "password": senha 
+        },
+        failOnStatusCode: false
+    }).then((response) => {
+        expect(response.status).to.equal(401)
+    })
+ })
