@@ -20,7 +20,7 @@ describe('Testes da Funcionalidade Usuários', () => {
   });
 
   it('Deve cadastrar um usuário com sucesso', () => {
-    cy.cadastrarUsuario(faker.person.fullName(), faker.internet.email()).should((response) => {
+    cy.cadastrarUsuario().should((response) => {
       expect(response.status).equal(201)
       expect(response.body).to.have.property('_id')
       expect(response.body.message).equal('Cadastro realizado com sucesso')
@@ -33,29 +33,35 @@ describe('Testes da Funcionalidade Usuários', () => {
     })
   });
 
-  it('Deve editar um usuário previamente cadastrado', () => {
-    cy.request({
-      method: 'PUT',
-      url: 'usuarios' + '/hHHZMwx20m0KBLX7',
-      body: {
-        "nome": "Ciclano da Silva Santos",
-        "email": "ciclano.santos@qa.com.br",
-        "password": "teste",
-        "administrador": "true"
-      }
-    }).should(response => {
-      expect(response.body.message).to.equal("Registro alterado com sucesso");
-      expect(response.status).to.equal(200)
-    })
+  it.only('Deve editar um usuário previamente cadastrado', () => {
+    cy.cadastrarUsuario().then((response) => {
+      const id = response.body._id;
+      cy.request({
+        method: 'PUT',
+        url: 'usuarios/' + id,
+        body: {
+          "nome": faker.person.fullName(),
+          "email": faker.internet.email(),
+          "password": "teste",
+          "administrador": "true"
+        }
+      }).should(response => {
+        expect(response.body.message).to.equal("Registro alterado com sucesso");
+        expect(response.status).to.equal(200)
+      })    })
+    
   });
 
   it('Deve deletar um usuário previamente cadastrado', () => {
-    cy.request({
-      method: 'DELETE',
-      url: 'usuarios' + '/2qO8ybBDugcJhFO9'
-    }).should((response => {
-      expect(response.body.message).to.equal("Registro excluído com sucesso");
-      expect(response.status).to.equal(200)
-    }))
+    cy.cadastrarUsuario().then((response) => {
+      const id = response.body._id;
+      cy.request({
+        method: 'DELETE',
+        url: `usuarios/${id}`,
+      }).should((response => {
+        expect(response.body.message).to.equal("Registro excluído com sucesso");
+        expect(response.status).to.equal(200)
+      }))
+    })
   });
 });
