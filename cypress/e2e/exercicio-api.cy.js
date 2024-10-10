@@ -33,7 +33,7 @@ describe('Testes da Funcionalidade Usuários', () => {
     })
   });
 
-  it.only('Deve editar um usuário previamente cadastrado', () => {
+  it('Deve editar um usuário previamente cadastrado', () => {
     cy.cadastrarUsuario().then((response) => {
       const id = response.body._id;
       cy.request({
