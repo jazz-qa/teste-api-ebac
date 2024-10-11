@@ -10,6 +10,7 @@ pipeline {
         stage('Instalar dependências') {
             steps {
                 bat 'npm install'
+                bat 'npm start'
             }
         }
         stage('Executar testes') {
