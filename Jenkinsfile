@@ -15,6 +15,7 @@ pipeline {
         stage('Iniciar servidor') {
             steps {
                 bat 'start /B npm start'
+                sleep 10
             }
         }
         stage('Executar testes') {
